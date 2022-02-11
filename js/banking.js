@@ -1,56 +1,69 @@
-function getInputValue() {
-  const depositInput = document.getElementById("deposit-input");
-  const depositAmountText = depositInput.value;
-  const depositAmount = parseFloat(depositAmountText);
+function getInputValue(inputId) {
+  const inputField = document.getElementById(inputId);
+  const inputFieldText = inputField.value;
+  const inputAmount = parseFloat(inputFieldText);
   // reset deposit input field
-  depositInput.value = "";
-  return depositAmount;
+  inputField.value = "";
+  return inputAmount;
 }
 
-document.getElementById("deposit-btn").addEventListener("click", function () {
-  //   const depositInput = document.getElementById("deposit-input");
-  //   const depositAmountText = depositInput.value;
-  //   const depositAmount = parseFloat(depositAmountText);
-    const depositAmount = getInputValue();
-  console.log(depositAmount);
+function updateTotalField(totalId, amount) {
+  const totalField = document.getElementById(totalId);
+  const totalFieldText = totalField.innerText;
+  const previousTotal = parseFloat(totalFieldText);
+  totalField.innerText = amount + previousTotal;
+}
+function updateBalance(balanceId, amount) {
+  const balanceTotal = document.getElementById("balance-total");
+//   const balanceTotalText = balanceTotal.innerText;
+//   const previousBalanceTotal = parseFloat(balanceTotalText);
+    const previousBalanceTotal = getCurrentBalance();
+  balanceTotal.innerText = previousBalanceTotal + amount;
+}
 
-  // get current  deposit
-  const depositTotal = document.getElementById("deposit-total");
-  const depositTotalText = depositTotal.innerText;
-  const previousDepositTotal = parseFloat(depositTotalText);
-
-  depositTotal.innerText = depositAmount + previousDepositTotal;
-  console.log(depositTotalText);
-
-  // update balance
-
+function getCurrentBalance() {
   const balanceTotal = document.getElementById("balance-total");
   const balanceTotalText = balanceTotal.innerText;
-  const previousBalanceTotal = parseFloat(balanceTotalText);
-  balanceTotal.innerText = previousBalanceTotal + depositAmount;
+    const previousBalanceTotal = parseFloat(balanceTotalText);
+    return previousBalanceTotal;
+}
+document.getElementById("deposit-btn").addEventListener("click", function () {
+  const depositAmount = getInputValue("deposit-input");
+  if (depositAmount > 0) {
+    updateTotalField("deposit-total", depositAmount);
+    updateBalance("balance-total", depositAmount);
+  }
+
+  // get current  deposit
+  // update balance
+
+  //   const balanceTotal = document.getElementById("balance-total");
+  //   const balanceTotalText = balanceTotal.innerText;
+  //   const previousBalanceTotal = parseFloat(balanceTotalText);
+  //   balanceTotal.innerText = previousBalanceTotal + depositAmount;
 });
 
 // handel withdraw btn
 
 document.getElementById("withdraw-btn").addEventListener("click", function () {
-  const withdrawInput = document.getElementById("withdraw-input");
-  const withdrawAmountText = withdrawInput.value;
-  const withdrawAmount = parseFloat(withdrawAmountText);
+    const withdrawAmount = getInputValue("withdraw-input");
+    const currentBalance = getCurrentBalance();
+  if (withdrawAmount > 0 && currentBalance> withdrawAmount) {
+    updateBalance("balance-total", -withdrawAmount);
 
-  console.log(withdrawAmountText);
+    updateTotalField("withdraw-total", withdrawAmount);
+  }
 
   // update withdraw total
-  const withdrawTotal = document.getElementById("withdraw-total");
-  const withdrawTotalText = withdrawTotal.innerText;
-  const previousWithdrawTotal = parseFloat(withdrawTotalText);
+  //   const withdrawTotal = document.getElementById("withdraw-total");
+  //   const withdrawTotalText = withdrawTotal.innerText;
+  //   const previousWithdrawTotal = parseFloat(withdrawTotalText);
 
-  withdrawTotal.innerText = previousWithdrawTotal + withdrawAmount;
+  //   withdrawTotal.innerText = previousWithdrawTotal + withdrawAmount;
 
   // update balance after withdraw
-  const balanceTotal = document.getElementById("balance-total");
-  const balanceTotalText = balanceTotal.innerText;
-  const previousBalanceTotal = parseFloat(balanceTotalText);
-  balanceTotal.innerText = previousBalanceTotal - withdrawAmount;
-  // reset withdraw input field
-  withdrawInput.value = "";
+  //   const balanceTotal = document.getElementById("balance-total");
+  //   const balanceTotalText = balanceTotal.innerText;
+  //   const previousBalanceTotal = parseFloat(balanceTotalText);
+  //   balanceTotal.innerText = previousBalanceTotal - withdrawAmount;
 });
